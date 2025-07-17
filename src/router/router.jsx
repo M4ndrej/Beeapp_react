@@ -16,6 +16,10 @@ const router = createBrowserRouter([
         element: <DefaultLayout/>,
         children: [
             {
+                path: '',
+                element: <ActivitiesPage/>
+            },
+            {
                 path: 'aktivnosti',
                 element: <ActivitiesPage/>
             },
@@ -45,6 +49,10 @@ const router = createBrowserRouter([
         path: "/",
         element: <GuestLayout/>,
         children: [
+            {
+                path: '',
+                element: <LoginPage/>
+            },
             {
                 path: 'login',
                 element: <LoginPage/>

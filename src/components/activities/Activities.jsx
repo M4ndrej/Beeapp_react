@@ -86,6 +86,28 @@ export const Activities = () => {
     return activityDate === selectedDateStr;
   });
 
+  const downloadComment = async (id) => {
+  try {
+    const response = await axiosClient(`download/${id}`);
+    console.log(response);
+    // if (!response.ok) {
+    //   throw new Error('Greška pri preuzimanju dokumenta');
+    // }
+
+     const url = window.URL.createObjectURL(new Blob([response.data]));
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `komentar_${id}.docx`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    window.URL.revokeObjectURL(url);
+  } catch (error) {
+    console.error('Download greška:', error);
+  }
+};
+
+
   const handleCreateActivity = async (formData) => {
     try {
       const response = await axiosClient.post("aktivnosti", formData);
@@ -215,6 +237,7 @@ export const Activities = () => {
                       <ListGroup.Item variant="light">
                         {kom.datum}
                       </ListGroup.Item>
+                      <Button className="w-25 m-2" onClick={()=>downloadComment(kom.id)}>Preuzmi</Button>
                     </React.Fragment>
                   ))}
                 </ListGroup>
