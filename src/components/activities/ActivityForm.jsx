@@ -21,6 +21,7 @@ export default function ActivityForm({ onCreate }) {
       try {
         const response = await axiosClient.get("kosnice"); // prilagodi endpoint ako treba
         setKosnice(response.data.data || []);
+        console.log(kosnice);
       } catch (error) {
         console.error("Greška pri učitavanju košnica:", error);
       }
