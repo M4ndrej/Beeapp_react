@@ -32,29 +32,16 @@ export default function ActivityForm({ onCreate }) {
 
   useEffect(() => {
     const fetchDrustva = async () => {
-      if (kosnice.length === 0) {
-        setDrustva([]);
-        return;
-      }
-
-      try {
-        const drustvaData = await Promise.all(
-          kosnice.map(async (kosnica) => {
-            const res = await axiosClient.get(`drustva/${kosnica.id}`);
-            return res.data ? [res.data.data] : [];
-          })
-        );
-
-        const flattenDrustva = drustvaData.flat();
-        setDrustva(flattenDrustva);
-      } catch (error) {
-        console.error("Greška pri učitavanju pčelinjih društava:", error);
-        setDrustva([]);
-      }
-    };
+    try {
+      const res = await axiosClient.get("drustva");
+      setDrustva(res.data.data);
+    } catch (err) {
+      console.error("Greška pri dohvatanju društava:", err);
+    }
+  };
 
     fetchDrustva();
-  }, [kosnice]);
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
