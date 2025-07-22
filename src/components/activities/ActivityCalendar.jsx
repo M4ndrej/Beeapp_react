@@ -4,12 +4,12 @@ import 'react-calendar/dist/Calendar.css';
 
 const ActivityCalendar = ({ selectedDate, onChange, activities }) => {
   const tileClassName = ({ date }) => {
-    const dateStr = date.toISOString().split('T')[0];
-    if (activities.includes(dateStr)) {
-      return 'has-activity';
-    }
-    return null;
-  };
+  const dateStr = date.toLocaleDateString("sv-SE");
+  if (activities.includes(dateStr)) {
+    return 'has-activity';
+  }
+  return null;
+};
 
   return (
     <Calendar

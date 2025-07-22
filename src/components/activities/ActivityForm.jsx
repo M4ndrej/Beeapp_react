@@ -97,6 +97,7 @@ export default function ActivityForm({ onCreate }) {
           onChange={handleChange}
           required
         >
+          <option value="">Odaberite tip</option>
           <option value="SEZONSKA">Sezonska</option>
           <option value="NESEZONSKA">Nesezonska</option>
         </Form.Select>
