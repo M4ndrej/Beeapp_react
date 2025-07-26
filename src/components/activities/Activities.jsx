@@ -13,6 +13,7 @@ import ActivityForm from "./ActivityForm";
 import CommentSuggestionModal from "./CommentSuggestionModal";
 import axiosClient from "../../axios/axios-client";
 import ApiCarousel from "../api/ApiCarousel";
+import { useStateContext } from "../../context/Context";
 
 export const Activities = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -29,8 +30,9 @@ export const Activities = () => {
   const [drustva, setDrustva] = useState([]);
   const [filterParam, setFilterParam] = useState("");
 
-  const toLocalDateString = (date) =>
-    date.toLocaleDateString("sv-SE"); // YYYY-MM-DD u lokalnom vremenu
+  const { user } = useStateContext();
+
+  const toLocalDateString = (date) => date.toLocaleDateString("sv-SE"); // YYYY-MM-DD u lokalnom vremenu
 
   const fetchAktivnosti = async (query = "") => {
     try {
@@ -38,9 +40,7 @@ export const Activities = () => {
       const response = await axiosClient.get(url);
       const data = response.data.data;
       setActivityData(data);
-      const datumi = data.map((a) =>
-        toLocalDateString(new Date(a.pocetak))
-      );
+      const datumi = data.map((a) => toLocalDateString(new Date(a.pocetak)));
       setActivities(datumi);
     } catch (err) {
       console.error("Greška pri dohvatanju aktivnosti", err);
@@ -79,7 +79,7 @@ export const Activities = () => {
   useEffect(() => {
     fetchAktivnosti();
     fetchDrustva();
-  }, []);
+  }, [activities]);
 
   const selectedDateStr = toLocalDateString(selectedDate);
 
@@ -106,7 +106,14 @@ export const Activities = () => {
 
   const handleCreateActivity = async (formData) => {
     try {
-      const response = await axiosClient.post("aktivnosti", formData);
+      var response;
+      if (user.role !== "admin") {
+        response = await axiosClient.post("aktivnosti", formData);
+      } else {
+        response = await axiosClient.post("createActivities", formData);
+        alert("Aktivnost uspešno kreirana!");
+        return;
+      }
       alert("Aktivnost uspešno kreirana!");
       setActivityData((prev) => [...prev, response.data.model]);
       const datumStr = toLocalDateString(new Date(formData.pocetak));
@@ -204,12 +211,24 @@ export const Activities = () => {
             <Card key={y} className="mb-3">
               <Card.Header>Detalji aktivnosti</Card.Header>
               <Card.Body>
-                <p><strong>Naziv:</strong> {x.naziv}</p>
-                <p><strong>Opis:</strong> {x.opis}</p>
-                <p><strong>Tip:</strong> {x.tip}</p>
-                <p><strong>Početak:</strong> {x.pocetak}</p>
-                <p><strong>Kraj:</strong> {x.kraj}</p>
-                <p><strong>Status:</strong> {x.status}</p>
+                <p>
+                  <strong>Naziv:</strong> {x.naziv}
+                </p>
+                <p>
+                  <strong>Opis:</strong> {x.opis}
+                </p>
+                <p>
+                  <strong>Tip:</strong> {x.tip}
+                </p>
+                <p>
+                  <strong>Početak:</strong> {x.pocetak}
+                </p>
+                <p>
+                  <strong>Kraj:</strong> {x.kraj}
+                </p>
+                <p>
+                  <strong>Status:</strong> {x.status}
+                </p>
 
                 <hr />
                 <h6>Komentari:</h6>
@@ -220,7 +239,12 @@ export const Activities = () => {
                       <ListGroup.Item variant="light">
                         {kom.datum}
                       </ListGroup.Item>
-                      <Button className="w-25 m-2" onClick={() => downloadComment(kom.id)}>Preuzmi</Button>
+                      <Button
+                        className="w-25 m-2"
+                        onClick={() => downloadComment(kom.id)}
+                      >
+                        Preuzmi
+                      </Button>
                     </React.Fragment>
                   ))}
                 </ListGroup>

@@ -35,6 +35,7 @@ export default function ActivityForm({ onCreate }) {
     try {
       const res = await axiosClient.get("drustva");
       setDrustva(res.data.data);
+      console.log(res);
     } catch (err) {
       console.error("Greška pri dohvatanju društava:", err);
     }
