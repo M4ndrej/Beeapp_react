@@ -3,13 +3,14 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { Link, useNavigate } from "react-router-dom";
 import { useStateContext } from "../context/Context";
-import axiosClient from "../axios/axios-client"; 
+import axiosClient from "../axios/axios-client";
 
 export const RegisterPage = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
+  const [role, setRole] = useState("");
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
@@ -30,11 +31,13 @@ export const RegisterPage = () => {
         name,
         email,
         password,
+        role,
       });
 
       setUser(response.data.user);
       setToken(response.data.token);
-      navigate('/login');
+      alert("Uspešna registracija");
+      navigate("/login");
     } catch (err) {
       console.error(err);
       setError("Registracija nije uspela. Proverite podatke.");
@@ -90,6 +93,19 @@ export const RegisterPage = () => {
               value={passwordConfirmation}
               onChange={(e) => setPasswordConfirmation(e.target.value)}
             />
+          </Form.Group>
+
+          <Form.Group className="mb-3" controlId="formBasicRole">
+            <Form.Label>Uloga</Form.Label>
+            <Form.Select
+              required
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+            >
+              <option value="">Izaberi ulogu</option>
+              <option value="admin">Admin</option>
+              <option value="pcelar">Pčelar</option>
+            </Form.Select>
           </Form.Group>
 
           <Button className="w-100" variant="primary" type="submit">

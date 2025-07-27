@@ -12,7 +12,6 @@ export default function BeeColonies() {
   const [showEditModal, setShowEditModal] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
 
-  // Paginacija
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
@@ -55,7 +54,6 @@ export default function BeeColonies() {
     }
   };
 
-  // Paginacija - računanje prikazanih kolonija
   const indexOfLastColony = currentPage * itemsPerPage;
   const indexOfFirstColony = indexOfLastColony - itemsPerPage;
   const currentColonies = colonies.slice(indexOfFirstColony, indexOfLastColony);
